@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/ENG618/eng-cli.git"
   },
-  "author": "Eric N. Garcia",
+  "author": "Eric N. Garcia <engarcia618@gamil.com> (http://garciaericn.com)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ENG618/eng-cli/issues"
