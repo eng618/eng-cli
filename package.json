@@ -1,0 +1,19 @@
+{
+  "name": "eng-cli",
+  "version": "1.0.0",
+  "description": "Personal package with shortcuts and cli helpers to help with my workflow.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ENG618/eng-cli.git"
+  },
+  "author": "Eric N. Garcia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ENG618/eng-cli/issues"
+  },
+  "homepage": "https://github.com/ENG618/eng-cli#readme"
+}
