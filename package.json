@@ -1,20 +1,30 @@
 {
   "name": "eng-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Personal package with shortcuts and cli helpers to help with my workflow.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "patch-release": "npm version patch && npm publish && git push --follow-tags"
   },
+  "preferGlobal": true,
+  "bin": {
+    "eng": "./index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ENG618/eng-cli.git"
   },
   "author": "Eric N. Garcia <engarcia618@gamil.com> (http://garciaericn.com)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ENG618/eng-cli/issues"
   },
-  "homepage": "https://github.com/ENG618/eng-cli#readme"
+  "homepage": "https://github.com/ENG618/eng-cli#readme",
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "commander": "^2.9.0",
+    "inquirer": "^5.1.0",
+    "shelljs": "^0.8.1"
+  }
 }
