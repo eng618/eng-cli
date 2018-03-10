@@ -1,12 +1,12 @@
 #!/usr/bin/env node --harmony
 
-// import './eng';
-
 const program = require('commander');
 const { prompt } = require('inquirer');
 const shell = require('shelljs');
 const chalk = require('chalk');
 
+const pkg = require('./package.json');
+const header = require('./assets/asci-header');
 
 
 const questions = [{
@@ -19,9 +19,11 @@ const questions = [{
   message: 'enter another word...'
 }];
 
-// program
-//   .description('[eng]arcia shell automation tool - (c) 2018 Eric N. Garcia')
-//   .alias('eng');
+program
+  .version(pkg.version)
+  .description(`${chalk.red(header)}
+  [eng]arcia shell automation tool - (c) 2018 Eric N. Garcia`
+  );
 
 program
   .command('hello-world')
