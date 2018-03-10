@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "yarn version && yarn publish && git push"
+    "publish": "yarn publish && git push"
   },
   "license": "MIT",
   "preferGlobal": true,
