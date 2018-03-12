@@ -1,24 +1,23 @@
 #!/usr/bin/env node --harmony
 
 const program = require('commander');
-const {
-  prompt
-} = require('inquirer');
+const {prompt} = require('inquirer');
 const shell = require('shelljs');
 const chalk = require('chalk');
 
 const pkg = require('../package.json');
 const header = require('../assets/asci-header');
+const systemUpdate = require('./upgrade');
 
 
 const questions = [{
   type: 'input',
   name: 'firstWord',
-  message: 'enter a word...'
+  message: 'enter a word...',
 }, {
   type: 'input',
   name: 'secondWord',
-  message: 'enter another word...'
+  message: 'enter another word...',
 }];
 
 module.exports = function() {
@@ -26,6 +25,14 @@ module.exports = function() {
     .version(pkg.version)
     .description(`${chalk.red(header)}
   [eng]arcia shell automation tool - (c) 2018 Eric N. Garcia`);
+
+  program
+    .command('upgrade-system')
+    .alias('u')
+    .description('Upgrade dev software')
+    .action(() => {
+      systemUpdate();
+    });
 
   program
     .command('hello-world')
@@ -40,17 +47,10 @@ module.exports = function() {
     .alias('ti')
     .description('Short little test to see if input is working')
     .action(() => {
-      prompt(questions).then(answers => {
-        console.log(chalk.magenta(`The first word is ${answers.firstWord}, and the second is ${answers.secondWord}`))
+      prompt(questions).then((answers) => {
+        const output = `${answers.firstWord} ${answers.secondWord}`;
+        console.log(chalk.magenta(output));
       });
-    });
-
-  program
-    .command('update')
-    .alias('u')
-    .description('Update dev software')
-    .action(() => {
-      console.log('This should be updating your stuff...');
     });
 
   program
