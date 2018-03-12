@@ -4,97 +4,84 @@ const shell = require('shelljs');
 const {
   prompt,
 } = require('inquirer');
-const chalk = require('chalk');
+const Promise = require('bluebird');
+const {start, info, warn, end} = require('./helpers/logs');
 
 
 /**
- * Start indicator.
- * @param {string} msg The message to be displayed
+ * Helper Function to execute commands synchronously with a completed callback.
+ * @param {string} cmd The command to be ran.
+ * @param {string} errMsg The possible error message to be displayed.
+ * @return {Promise}
  */
-function start(msg) {
-  console.log(chalk.magenta(`==> ${msg}`));
-};
-
-/**
- * Info indicator.
- * @param {string} msg The message to be displayed
- */
-function info(msg) {
-  console.log(chalk.cyan(`==! ${msg}`));
-};
-
-/**
- * Warning indicator.
- * @param {string} msg The message to be displayed
- */
-function warning(msg) {
-  console.log(chalk.red(`==x ${msg}`));
-};
-
-/**
- * End indicator.
- * @param {string} msg The message to be displayed
- */
-function end(msg) {
-  console.log(chalk.green(`==# ${msg}`));
+function runUpgradeCommand(cmd, errMsg) {
+  return new Promise((resolve) => {
+    shell.exec(cmd, (code, stdout, stderr) => {
+      if (code !== 0) {
+        shell.echo(warn(`Error ${errMsg}:\n${stderr}`));
+        shell.exit(1);
+      };
+      resolve('resolved');
+    });
+  });
 };
 
 /**
  * Updates the systems ruby-gems
  */
-function updateRubyGems() {
+async function updateRubyGems() {
   start('Updating RubyGems');
-  if (shell.exec('gem update --system').code !== 0) {
-    shell.echo(warning('Error updating rubygems'));
-    shell.exit(1);
-  }
+
+  command = 'gem update --system';
+  error = 'updating ruby-gems';
+
+  await runUpgradeCommand(command, error);
+
   end('Updating RubyGems completed');
-}
+};
 
 /**
  * Synchronizes the dot files with the remote git repository.
  */
-function syncDotFiles() {
+async function syncDotFiles() {
   const gitString = 'git --git-dir=$HOME/.eng-cfg/ --work-tree=$HOME';
 
   start('Syncing dot-files');
+
   info('Fetching remote changes');
-  if (shell.exec(`${gitString} fetch`).code !== 0) {
-    shell.echo(warning('Error fetching'));
-    shell.exit(1);
-  }
+  await runUpgradeCommand(`${gitString} fetch`, 'fetching');
+
   info('Showing status');
-  if (shell.exec(`${gitString} status`).code !== 0) {
-    shell.echo(warning('Error showing status'));
-    shell.exit(1);
-  }
+  await runUpgradeCommand(`${gitString} status`, 'showing status');
+
   info('Pulling changes');
-  if (shell.exec(`${gitString} pull --ff-only`).code !== 0) {
-    shell.echo(warning('Error pulling'));
-    shell.exit(1);
-  }
+  await runUpgradeCommand(`${gitString} pull --ff-only`, 'pulling');
+
   end('Syncing dot-files complete');
 };
 
 /**
  * Update node via nvm.
  */
-function updateNode() {
+async function updateNode() {
   start('Updating node');
+
   if (shell.exec('nvm install node', {
       shell: '$NVM_DIR/nvm.sh',
     }).code !== 0) {
-    shell.echo(warning('Error installing node'));
+    shell.echo(warn('Error installing node'));
     shell.exit(1);
   }
+
   info('Switching to default');
   if (shell.exec(
       'nvm use --delete-prefix default', {
         shell: '$NVM_DIR/nvm.sh',
       }).code !== 0) {
-    shell.echo(warning('Error switching to nvm default'));
+    shell.echo(warn('Error switching to nvm default'));
     shell.exit(1);
   }
+
   end('node update complete');
 };
 
@@ -118,20 +105,31 @@ function updateBrew() {
     default: 'Yes',
   };
 
-  if (shell.exec('brew update').code !== 0) {
-    shell.echo(warning('Error updating brew'));
-    shell.exit(1);
-  }
+  shell.exec('brew update', (code, stdout, stderr) => {
+    if (code !== 0) {
+      shell.echo(warn(`Error updating brew:\n${stderr}`));
+      shell.exit(1);
+    }
+  });
 
-  if (shell.exec('brew outdated').code !== 0) {
-    shell.echo(warning('Error showing outdated brew packages'));
-    shell.exit(1);
-  }
+  shell.exec('brew outdated', (code, stdout, stderr) => {
+    if (code !== 0) {
+      shell.echo(warn(`Error showing outdated:\n${stderr}`));
+      shell.exit(1);
+    }
+  });
 
   prompt(upgrade).then((answers) => {
     if (answers.shouldUpdate) {
+      shell.exec('brew upgrade', (code, stdout, stderr) => {
+        if (code !== 0) {
+          shell.echo(warn(`Error upgrading brew:\n${stderr}`));
+          shell.exit(1);
+        }
+      });
+
       if (shell.exec('brew upgrade').code !== 0) {
-        shell.echo(warning('Error showing packages to clean up'));
+        shell.echo(warn('Error showing packages to clean up'));
         shell.exit(1);
       }
     } else {
@@ -139,14 +137,14 @@ function updateBrew() {
     }
 
     if (shell.exec('brew cleanup --dry-run').code !== 0) {
-      shell.echo(warning('Error showing packages to clean up'));
+      shell.echo(warn('Error showing packages to clean up'));
       shell.exit(1);
     }
 
     prompt(cleanup).then((answers) => {
       if (answers.shouldCleanup) {
         if (shell.exec('brew cleanup').code !== 0) {
-          shell.echo(warning('Error cleaning up packages'));
+          shell.echo(warn('Error cleaning up packages'));
           shell.exit(1);
         }
       } else {
@@ -160,41 +158,24 @@ function updateBrew() {
 /**
  * Update NVM.
  */
-function updateNvm() {
+async function updateNvm() {
   const command = 'curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash';
 
   start('Updating NVM');
-
-  shell.exec(command, (code, stdout, stderr) => {
-    if (code !== 0) {
-      shell.echo(warning(`Error updating NVM:\n${stderr}`));
-      shell.exit(1);
-    }
-  });
-
+  await runUpgradeCommand(command, 'updating NVM');
   end('Update NVM complete');
 };
 
 /**
  * Update avn.
  */
-function updateAvn() {
+async function updateAvn() {
   const command = 'yarn global upgrade avn avn-nvm avn-n';
 
   start('Updating avn');
 
-  shell.exec(command, (code, stdout, stderr) => {
-    if (code !== 0) {
-      shell.echo(warning(`Error updating avn:\n${stderr}`));
-      shell.exit(1);
-    };
-    shell.exec('avn setup'), (code, stdout, stderr) => {
-      if (code !== 0) {
-        shell.echo(warning(`Error setting up avn:\n${stderr}`));
-        shell.exit(1);
-      };
-    };
-  });
+  await runUpgradeCommand(command, 'updating avn');
+  await runUpgradeCommand('avn setup', 'setting up avn');
 
   end('Update avn complete');
 };
@@ -202,15 +183,13 @@ function updateAvn() {
 /**
  * Update yarn.
  */
-function updateYarn() {
+async function updateYarn() {
   start('Updating yarn global packages');
 
-  shell.exec('yarn global upgrade-interactive', (code, stdout, stderr) => {
-    if (code !== 0) {
-      shell.echo(warning(`Error updating yarn packages:\n${stderr}`));
-      shell.exit(1);
-    }
-  });
+  await runUpgradeCommand(
+    'yarn global upgrade-interactive',
+    'updating yarn packages'
+  );
 
   end('Update yarn global packages complete');
 };
@@ -219,7 +198,7 @@ module.exports = function() {
   updateRubyGems();
   syncDotFiles();
   updateNode();
-  updateBrew();
+  // updateBrew();
   updateNvm();
   updateAvn();
   updateYarn();

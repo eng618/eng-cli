@@ -27,6 +27,7 @@
     "url": "https://github.com/ENG618/eng-cli/issues"
   },
   "dependencies": {
+    "bluebird": "^3.5.1",
     "chalk": "^1.1.3",
     "commander": "^2.9.0",
     "inquirer": "^5.1.0",
