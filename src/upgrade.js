@@ -157,9 +157,70 @@ function updateBrew() {
   });
 };
 
+/**
+ * Update NVM.
+ */
+function updateNvm() {
+  const command = 'curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash';
+
+  start('Updating NVM');
+
+  shell.exec(command, (code, stdout, stderr) => {
+    if (code !== 0) {
+      shell.echo(warning(`Error updating NVM:\n${stderr}`));
+      shell.exit(1);
+    }
+  });
+
+  end('Update NVM complete');
+};
+
+/**
+ * Update avn.
+ */
+function updateAvn() {
+  const command = 'yarn global upgrade avn avn-nvm avn-n';
+
+  start('Updating avn');
+
+  shell.exec(command, (code, stdout, stderr) => {
+    if (code !== 0) {
+      shell.echo(warning(`Error updating avn:\n${stderr}`));
+      shell.exit(1);
+    };
+    shell.exec('avn setup'), (code, stdout, stderr) => {
+      if (code !== 0) {
+        shell.echo(warning(`Error setting up avn:\n${stderr}`));
+        shell.exit(1);
+      };
+    };
+  });
+
+  end('Update avn complete');
+};
+
+/**
+ * Update yarn.
+ */
+function updateYarn() {
+  start('Updating yarn global packages');
+
+  shell.exec('yarn global upgrade-interactive', (code, stdout, stderr) => {
+    if (code !== 0) {
+      shell.echo(warning(`Error updating yarn packages:\n${stderr}`));
+      shell.exit(1);
+    }
+  });
+
+  end('Update yarn global packages complete');
+};
+
 module.exports = function() {
   updateRubyGems();
   syncDotFiles();
   updateNode();
   updateBrew();
+  updateNvm();
+  updateAvn();
+  updateYarn();
 };
