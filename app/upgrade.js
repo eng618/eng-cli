@@ -1,5 +1,7 @@
 #!/usr/bin/env node --harmony
 
+const os = require('os');
+
 const shell = require('shelljs');
 const {
   prompt,
@@ -25,6 +27,26 @@ function runUpgradeCommand(cmd, errMsg) {
     });
   });
 };
+
+/**
+ * Helper Function to execute commands synchronously with a completed callback.
+ * @param {string} cmd The command to be ran.
+ * @param {string} errMsg The possible error message to be displayed.
+ * @return {Promise}
+ */
+function runUpgradeCommandWithShell(cmd, shell, errMsg) {
+  return new Promise((resolve, reject) => {
+    shell.exec(cmd, `{shell: ${shell}}`, (code, stdout, stderr) => {
+      if (code !== 0) {
+        reject(`Error: ${errMsg}`);
+        shell.echo(warn(`Error ${errMsg}:\n${stderr}`));
+        shell.exit(1);
+      };
+      resolve('resolved');
+    });
+  });
+};
+
 
 /**
  * Updates the systems ruby-gems
@@ -65,13 +87,21 @@ async function syncDotFiles() {
  */
 async function updateNode() {
   start('Updating node');
+  const cmd = 'nvm install node';
+  const shell = '$NVM_DIR/nvm.sh';
+  console.log(os.homedir());
+  const options = `${os.homedir()}/.nvm/nvm.sh`;
+  let command = `'${cmd}', ${options}`;
 
-  if (shell.exec('nvm install node', {
-      shell: '$NVM_DIR/nvm.sh',
-    }).code !== 0) {
-    shell.echo(warn('Error installing node'));
-    shell.exit(1);
-  }
+  // await runUpgradeCommand(command, 'installing node');
+  await runUpgradeCommandWithShell(cmd, shell, 'installing node');
+
+  // if (shell.exec('nvm install node', {
+  //     shell: '$NVM_DIR/nvm.sh',
+  //   }).code !== 0) {
+  //   shell.echo(warn('Error installing node'));
+  //   shell.exit(1);
+  // }
 
   info('Switching to default');
   if (shell.exec(
@@ -194,12 +224,26 @@ async function updateYarn() {
   end('Update yarn global packages complete');
 };
 
-module.exports = function() {
-  updateRubyGems();
-  syncDotFiles();
-  updateNode();
-  // updateBrew();
-  updateNvm();
-  updateAvn();
-  updateYarn();
+/**
+ * Run update on all.
+ */
+async function upgradeAll() {
+  await updateRubyGems();
+  await syncDotFiles();
+  await updateNode();
+  // await updateBrew();
+  await updateNvm();
+  await updateAvn();
+  await updateYarn();
+}
+
+module.exports = {
+  system: updateRubyGems,
+  dotFiles: syncDotFiles,
+  node: updateNode,
+  brew: updateBrew,
+  nvm: updateNvm,
+  avn: updateAvn,
+  yarn: updateYarn,
+  all: upgradeAll,
 };

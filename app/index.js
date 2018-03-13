@@ -7,7 +7,7 @@ const chalk = require('chalk');
 
 const pkg = require('../package.json');
 const header = require('../assets/asci-header');
-const systemUpdate = require('./upgrade');
+const upgrade = require('./upgrade');
 
 
 const questions = [{
@@ -20,26 +20,33 @@ const questions = [{
   message: 'enter another word...',
 }];
 
-module.exports = function() {
   program
     .version(pkg.version)
     .description(`${chalk.red(header)}
   [eng]arcia shell automation tool - (c) 2018 Eric N. Garcia`);
 
   program
-    .command('upgrade-system')
+    .command('upgrade-all')
     .alias('u')
     .description('Upgrade dev software')
     .action(() => {
-      systemUpdate();
+      upgrade.upgradeAll();
     });
 
   program
-    .command('hello-world')
-    .alias('hw')
+    .command('upgrade-system')
+    .alias('us')
+    .description('Upgrade dev software')
+    .action(() => {
+      upgrade.system();
+    });
+
+  program
+    .command('update-node')
+    .alias('un')
     .description('Basic Hello World check!')
     .action(() => {
-      console.log('Hello World!');
+      upgrade.node();
     });
 
   program
@@ -65,4 +72,3 @@ module.exports = function() {
     });
 
   program.parse(process.argv);
-};
