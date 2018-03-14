@@ -1,6 +1,6 @@
 {
   "name": "eng-cli",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Personal package with shortcuts and cli helpers to help with my workflow.",
   "author": {
     "name": "Eric N. Garcia",
@@ -13,7 +13,9 @@
     "lint": "eslint **/*.js"
   },
   "license": "MIT",
-  "os": ["darwin"],
+  "os": [
+    "darwin"
+  ],
   "preferGlobal": true,
   "bin": {
     "eng": "./index.js"
