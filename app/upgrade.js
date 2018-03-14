@@ -51,7 +51,7 @@ function runUpgradeCommandWithShell(cmd, shell, errMsg) {
 /**
  * Updates the systems ruby-gems
  */
-async function updateRubyGems() {
+async function updateSystem() {
   start('Updating RubyGems');
 
   command = 'gem update --system';
@@ -65,7 +65,7 @@ async function updateRubyGems() {
 /**
  * Synchronizes the dot files with the remote git repository.
  */
-async function syncDotFiles() {
+async function updateDotFiles() {
   const gitString = 'git --git-dir=$HOME/.eng-cfg/ --work-tree=$HOME';
 
   start('Syncing dot-files');
@@ -227,9 +227,9 @@ async function updateYarn() {
 /**
  * Run update on all.
  */
-async function upgradeAll() {
-  await updateRubyGems();
-  await syncDotFiles();
+async function updateAll() {
+  await updateSystem();
+  await updateDotFiles();
   await updateNode();
   // await updateBrew();
   await updateNvm();
@@ -238,12 +238,12 @@ async function upgradeAll() {
 }
 
 module.exports = {
-  system: updateRubyGems,
-  dotFiles: syncDotFiles,
-  node: updateNode,
-  brew: updateBrew,
-  nvm: updateNvm,
-  avn: updateAvn,
-  yarn: updateYarn,
-  all: upgradeAll,
+  updateAll,
+  updateSystem,
+  updateDotFiles,
+  updateNode,
+  updateBrew,
+  updateNvm,
+  updateAvn,
+  updateYarn,
 };

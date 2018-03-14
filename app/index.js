@@ -7,7 +7,7 @@ const chalk = require('chalk');
 
 const pkg = require('../package.json');
 const header = require('../assets/asci-header');
-const upgrade = require('./upgrade');
+const {updateAll, updateSystem, updateDotFiles, updateNode, updateBrew, updateNvm, updateAvn, updateYarn} = require('./upgrade');
 
 
 const questions = [{
@@ -30,15 +30,15 @@ const questions = [{
     .alias('u')
     .description('Upgrade dev software')
     .action(() => {
-      upgrade.upgradeAll();
+      updateAll();
     });
 
   program
-    .command('upgrade-system')
+    .command('update-system')
     .alias('us')
     .description('Upgrade dev software')
     .action(() => {
-      upgrade.system();
+      updateSystem();
     });
 
   program
@@ -46,7 +46,7 @@ const questions = [{
     .alias('un')
     .description('Basic Hello World check!')
     .action(() => {
-      upgrade.node();
+      updateNode();
     });
 
   program
