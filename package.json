@@ -13,6 +13,7 @@
     "lint": "eslint **/*.js"
   },
   "license": "MIT",
+  "os": ["darwin"],
   "preferGlobal": true,
   "bin": {
     "eng": "./index.js"
