@@ -167,20 +167,6 @@ async function updateNvm() {
 };
 
 /**
- * Update avn.
- */
-async function updateAvn() {
-  const command = 'yarn global upgrade avn avn-nvm avn-n';
-
-  start('Updating avn');
-
-  await runUpgradeCommand(command, 'updating avn');
-  await runUpgradeCommand('avn setup', 'setting up avn');
-
-  end('Update avn complete');
-};
-
-/**
  * Update yarn.
  */
 async function updateYarn() {
@@ -195,6 +181,17 @@ async function updateYarn() {
 };
 
 /**
+ * Update avn.
+ */
+async function updateAvn() {
+  start('Updating avn');
+
+  await runUpgradeCommand('avn setup', 'setting up avn');
+
+  end('Update avn complete');
+};
+
+/**
  * Run update on all.
  */
 async function updateAll() {
@@ -203,8 +200,8 @@ async function updateAll() {
   await updateNode();
   await updateBrew();
   await updateNvm();
-  await updateAvn();
   await updateYarn();
+  await updateAvn();
 }
 
 module.exports = {
