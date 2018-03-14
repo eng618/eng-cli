@@ -37,9 +37,17 @@ program
 program
   .command('update-system')
   .alias('us')
-  .description('Upgrade dev software')
+  .description('Upgrade system\'s Ruby environment')
   .action(() => {
     updateSystem();
+  });
+
+program
+  .command('update-dot-files')
+  .alias('udf')
+  .description('Synchronizes .files with remote repository')
+  .action(() => {
+    updateDotFiles();
   });
 
 program
@@ -51,25 +59,36 @@ program
   });
 
 program
-  .command('test-input')
-  .alias('ti')
-  .description('Short little test to see if input is working')
+  .command('update-brew')
+  .alias('ub')
+  .description('Update brew, and all installed packages')
   .action(() => {
-    prompt(questions).then((answers) => {
-      const output = `${answers.firstWord} ${answers.secondWord}`;
-      console.log(chalk.magenta(output));
-    });
+    updateBrew();
+  });
+
+
+program
+  .command('update-nvm')
+  .alias('unvm')
+  .description('Update nvm')
+  .action(() => {
+    updateNvm();
   });
 
 program
-  .command('print-working-dir')
-  .alias('pwd')
-  .description('prints the current working directory')
+  .command('update-avn')
+  .alias('uavn')
+  .description('Update avn')
   .action(() => {
-    if (shell.exec('pwd').code !== 0) {
-      shell.echo('Error: Git commit failed');
-      shell.exit(1);
-    }
+    updateAvn();
+  });
+
+program
+  .command('update-yarn')
+  .alias('uy')
+  .description('Update all globally install yarn packages.')
+  .action(() => {
+    updateYarn();
   });
 
 program.parse(process.argv);
