@@ -1,10 +1,6 @@
 #!/usr/bin/env node --harmony
 
 const program = require('commander');
-const {
-  prompt
-} = require('inquirer');
-const shell = require('shelljs');
 const chalk = require('chalk');
 
 const pkg = require('../package.json');

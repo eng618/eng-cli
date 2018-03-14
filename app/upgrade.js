@@ -1,13 +1,16 @@
 #!/usr/bin/env node --harmony
 
-const os = require('os');
-
 const shell = require('shelljs');
 const {
   prompt,
 } = require('inquirer');
 const Promise = require('bluebird');
-const {start, info, warn, end} = require('./helpers/logs');
+const {
+  start,
+  info,
+  warn,
+  end,
+} = require('./helpers/logs');
 
 
 /**
@@ -31,6 +34,7 @@ function runUpgradeCommand(cmd, errMsg) {
 /**
  * Helper Function to execute commands synchronously with a completed callback.
  * @param {string} cmd The command to be ran.
+ * @param {string} shell The preferred shell to run command in.
  * @param {string} errMsg The possible error message to be displayed.
  * @return {Promise}
  */
@@ -45,6 +49,16 @@ function runUpgradeCommandWithShell(cmd, shell, errMsg) {
       resolve('resolved');
     });
   });
+};
+
+/**
+ * Helper function to handle promise rejection errors.
+ * @param {string} err The rejected error.
+ */
+function catchErr(err) {
+  warn(`Something went wrong installing node with nvm
+
+    Error: ${err}`);
 };
 
 
@@ -86,31 +100,18 @@ async function updateDotFiles() {
  * Update node via nvm.
  */
 async function updateNode() {
+  const shell = `$NVM_DIR/nvm.sh`;
+  let command = 'nvm install node';
+
   start('Updating node');
-  const cmd = 'nvm install node';
-  const shell = '$NVM_DIR/nvm.sh';
-  console.log(os.homedir());
-  const options = `${os.homedir()}/.nvm/nvm.sh`;
-  let command = `'${cmd}', ${options}`;
 
-  // await runUpgradeCommand(command, 'installing node');
-  await runUpgradeCommandWithShell(cmd, shell, 'installing node');
-
-  // if (shell.exec('nvm install node', {
-  //     shell: '$NVM_DIR/nvm.sh',
-  //   }).code !== 0) {
-  //   shell.echo(warn('Error installing node'));
-  //   shell.exit(1);
-  // }
+  await runUpgradeCommandWithShell(command, shell, 'installing node')
+    .catch((err) => catchErr(err));
 
   info('Switching to default');
-  if (shell.exec(
-      'nvm use --delete-prefix default', {
-        shell: '$NVM_DIR/nvm.sh',
-      }).code !== 0) {
-    shell.echo(warn('Error switching to nvm default'));
-    shell.exit(1);
-  }
+  command = 'nvm use --delete-prefix default';
+  await runUpgradeCommandWithShell(command, shell, 'switching to nvm default')
+    .catch((err) => catchErr(err));
 
   end('node update complete');
 };
@@ -118,7 +119,7 @@ async function updateNode() {
 /**
  * Update brew packages.
  */
-function updateBrew() {
+async function updateBrew() {
   start('Updating brew');
 
   const upgrade = {
@@ -135,53 +136,22 @@ function updateBrew() {
     default: 'Yes',
   };
 
-  shell.exec('brew update', (code, stdout, stderr) => {
-    if (code !== 0) {
-      shell.echo(warn(`Error updating brew:\n${stderr}`));
-      shell.exit(1);
-    }
-  });
-
-  shell.exec('brew outdated', (code, stdout, stderr) => {
-    if (code !== 0) {
-      shell.echo(warn(`Error showing outdated:\n${stderr}`));
-      shell.exit(1);
-    }
-  });
-
-  prompt(upgrade).then((answers) => {
+  await runUpgradeCommand('brew update', 'updating brew');
+  await runUpgradeCommand('brew outdated', 'showing outdated');
+  await prompt(upgrade).then((answers) => {
     if (answers.shouldUpdate) {
-      shell.exec('brew upgrade', (code, stdout, stderr) => {
-        if (code !== 0) {
-          shell.echo(warn(`Error upgrading brew:\n${stderr}`));
-          shell.exit(1);
-        }
-      });
-
-      if (shell.exec('brew upgrade').code !== 0) {
-        shell.echo(warn('Error showing packages to clean up'));
-        shell.exit(1);
-      }
+      runUpgradeCommand('brew upgrade', 'upgrading brew');
     } else {
       info('Skipping brew update');
     }
-
-    if (shell.exec('brew cleanup --dry-run').code !== 0) {
-      shell.echo(warn('Error showing packages to clean up'));
-      shell.exit(1);
+  });
+  await runUpgradeCommand('brew cleanup --dry-run', 'showing packages to cleanup'); // eslint-disable-line
+  await prompt(cleanup).then((answers) => {
+    if (answers.shouldCleanup) {
+      runUpgradeCommand('brew cleanup', 'cleaning brew packages');
+    } else {
+      info('Skipping brew cleanup');
     }
-
-    prompt(cleanup).then((answers) => {
-      if (answers.shouldCleanup) {
-        if (shell.exec('brew cleanup').code !== 0) {
-          shell.echo(warn('Error cleaning up packages'));
-          shell.exit(1);
-        }
-      } else {
-        info('Skipping cleanup');
-      }
-      end('Updating brew completed');
-    });
   });
 };
 
@@ -231,7 +201,7 @@ async function updateAll() {
   await updateSystem();
   await updateDotFiles();
   await updateNode();
-  // await updateBrew();
+  await updateBrew();
   await updateNvm();
   await updateAvn();
   await updateYarn();
