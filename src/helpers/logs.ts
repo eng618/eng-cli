@@ -1,10 +1,10 @@
-const chalk = require('chalk');
+import chalk from 'chalk';
 
 /**
  * Start indicator.
  * @param {string} msg The message to be displayed
  */
-function start(msg) {
+function start(msg: String) {
   console.log(chalk.magenta(`==> ${msg}`));
 };
 
@@ -12,7 +12,7 @@ function start(msg) {
  * Info indicator.
  * @param {string} msg The message to be displayed
  */
-function info(msg) {
+function info(msg: String) {
   console.log(chalk.cyan(`==! ${msg}`));
 };
 
@@ -20,7 +20,7 @@ function info(msg) {
  * Warning indicator.
  * @param {string} msg The message to be displayed
  */
-function warn(msg) {
+function warn(msg: String) {
   console.log(chalk.red(`==x ${msg}`));
 };
 
@@ -28,11 +28,11 @@ function warn(msg) {
  * End indicator.
  * @param {string} msg The message to be displayed
  */
-function end(msg) {
+function end(msg: String) {
   console.log(chalk.green(`==# ${msg}`));
 };
 
-module.exports = {
+export = {
   start,
   info,
   warn,

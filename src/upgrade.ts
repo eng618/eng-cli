@@ -1,16 +1,16 @@
 #!/usr/bin/env node --harmony
 
-const shell = require('shelljs');
-const {
+import shell from 'shelljs';
+import {
   prompt,
-} = require('inquirer');
-const Promise = require('bluebird');
-const {
+} from 'inquirer';
+import Promise from 'bluebird';
+import {
   start,
   info,
   warn,
   end,
-} = require('./helpers/logs');
+} from './helpers/logs';
 
 
 /**
@@ -19,7 +19,7 @@ const {
  * @param {string} errMsg The possible error message to be displayed.
  * @return {Promise}
  */
-function runUpgradeCommand(cmd, errMsg) {
+function runUpgradeCommand(cmd: String, errMsg: String) {
   return new Promise((resolve) => {
     shell.exec(cmd, (code, stdout, stderr) => {
       if (code !== 0) {
@@ -38,7 +38,7 @@ function runUpgradeCommand(cmd, errMsg) {
  * @param {string} errMsg The possible error message to be displayed.
  * @return {Promise}
  */
-function runUpgradeCommandWithShell(cmd, shell, errMsg) {
+function runUpgradeCommandWithShell(cmd: String, shell: String, errMsg: String) {
   return new Promise((resolve, reject) => {
     shell.exec(cmd, `{shell: ${shell}}`, (code, stdout, stderr) => {
       if (code !== 0) {
@@ -55,7 +55,7 @@ function runUpgradeCommandWithShell(cmd, shell, errMsg) {
  * Helper function to handle promise rejection errors.
  * @param {string} err The rejected error.
  */
-function catchErr(err) {
+function catchErr(err: String) {
   warn(`Something went wrong installing node with nvm
 
     Error: ${err}`);
@@ -204,7 +204,7 @@ async function updateAll() {
   await updateAvn();
 }
 
-module.exports = {
+export {
   updateAll,
   updateSystem,
   updateDotFiles,

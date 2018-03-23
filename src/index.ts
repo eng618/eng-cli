@@ -1,11 +1,11 @@
 #!/usr/bin/env node --harmony
+import * as path from 'path';
 
-const program = require('commander');
-const chalk = require('chalk');
+import * as program from 'commander';
+import chalk from 'chalk';
 
-const pkg = require('../package.json');
-const header = require('../assets/asci-header');
-const {
+import * as header from './assets/asci-header';
+import {
   updateAll,
   updateSystem,
   updateDotFiles,
@@ -14,7 +14,10 @@ const {
   updateNvm,
   updateAvn,
   updateYarn,
-} = require('./upgrade');
+} from './upgrade';
+
+const pkgPath: String = path.resolve(__dirname, 'package.json');
+import pkg from pkgPath;
 
 
 program
@@ -88,3 +91,7 @@ program
   });
 
 program.parse(process.argv);
+
+export default function() {
+
+}
