@@ -26,7 +26,7 @@ function runUpgradeCommand(cmd, errMsg) {
         shell.echo(warn(`Error ${errMsg}:\n${stderr}`));
         shell.exit(1);
       };
-      resolve('resolved');
+      resolve(true);
     });
   });
 };
@@ -46,7 +46,7 @@ function runUpgradeCommandWithShell(cmd, shell, errMsg) {
         shell.echo(warn(`Error ${errMsg}:\n${stderr}`));
         shell.exit(1);
       };
-      resolve('resolved');
+      resolve(true);
     });
   });
 };
@@ -60,7 +60,6 @@ function catchErr(err) {
 
     Error: ${err}`);
 };
-
 
 /**
  * Updates the systems ruby-gems
@@ -122,37 +121,40 @@ async function updateNode() {
 async function updateBrew() {
   start('Updating brew');
 
-  const upgrade = {
+  const upgradePrompt = {
     type: 'confirm',
-    name: 'shouldUpdate',
+    name: 'shouldUpgrade',
     message: 'Want to upgrade the above outdated brew packages?',
     default: 'Yes',
   };
-
-  const cleanup = {
+  const cleanupPrompt = {
     type: 'confirm',
     name: 'shouldCleanup',
     message: 'Want to cleanup the above old brew packages?',
     default: 'Yes',
   };
 
-  await runUpgradeCommand('brew update', 'updating brew');
+  await runUpgradeCommand('brew update', 'Updating brew');
+
+  // Outdated
   await runUpgradeCommand('brew outdated', 'showing outdated');
-  await prompt(upgrade).then((answers) => {
-    if (answers.shouldUpdate) {
-      runUpgradeCommand('brew upgrade', 'upgrading brew');
-    } else {
-      info('Skipping brew update');
-    }
-  });
-  await runUpgradeCommand('brew cleanup --dry-run', 'showing packages to cleanup'); // eslint-disable-line
-  await prompt(cleanup).then((answers) => {
-    if (answers.shouldCleanup) {
-      runUpgradeCommand('brew cleanup', 'cleaning brew packages');
-    } else {
-      info('Skipping brew cleanup');
-    }
-  });
+  const brewUpgrade = await prompt(upgradePrompt);
+  if (brewUpgrade.shouldUpgrade) {
+    await runUpgradeCommand('brew upgrade', 'upgrading brew');
+  } else {
+    info('Skipping brew update');
+  }
+
+  // Cleanup
+  await runUpgradeCommand('brew cleanup -n', 'showing packages to cleanup');
+  const brewCleanup = await prompt(cleanupPrompt);
+  if (brewCleanup.shouldCleanup) {
+    await runUpgradeCommand('brew cleanup', 'cleaning brew packages');
+  } else {
+    info('Skipping brew cleanup');
+  }
+
+  end('Updating brew completed');
 };
 
 /**
