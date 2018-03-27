@@ -23,68 +23,18 @@ program
   [eng]arcia shell automation tool - (c) 2018 Eric N. Garcia`);
 
 program
-  .command('upgrade-all')
+  .command('upgrade')
   .alias('u')
+  .option('-a, --all', 'Upgrade all')
+  .option('-s, --system', 'Upgrade systems RubyGems')
+  .option('-d, --dot-files', 'Sync dotfiles')
+  .option('-n, --node', 'Upgrade node, nvm, and avn')
+  .option('-b, --brew', 'Upgrade brew and installed packages')
+  .option('-y, --yarn', 'Upgrade yarn globally installed packages')
   .description('Upgrade dev software')
   .action(() => {
-    updateAll();
-  });
-
-program
-  .command('update-system')
-  .alias('us')
-  .description('Upgrade system\'s Ruby environment')
-  .action(() => {
-    updateSystem();
-  });
-
-program
-  .command('update-dot-files')
-  .alias('udf')
-  .description('Synchronizes .files with remote repository')
-  .action(() => {
-    updateDotFiles();
-  });
-
-program
-  .command('update-node')
-  .alias('un')
-  .description('Basic Hello World check!')
-  .action(() => {
-    updateNode();
-  });
-
-program
-  .command('update-brew')
-  .alias('ub')
-  .description('Update brew, and all installed packages')
-  .action(() => {
-    updateBrew();
-  });
-
-
-program
-  .command('update-nvm')
-  .alias('unvm')
-  .description('Update nvm')
-  .action(() => {
-    updateNvm();
-  });
-
-program
-  .command('update-avn')
-  .alias('uavn')
-  .description('Update avn')
-  .action(() => {
-    updateAvn();
-  });
-
-program
-  .command('update-yarn')
-  .alias('uy')
-  .description('Update all globally install yarn packages.')
-  .action(() => {
-    updateYarn();
+    console.log(program.all);
+    // updateAll();
   });
 
 program.parse(process.argv);

@@ -20,7 +20,7 @@
   "bin": {
     "eng": "bin/eng"
   },
-  "main": "index.js",
+  "main": "src/eng.js",
   "homepage": "https://github.com/ENG618/eng-cli#readme",
   "repository": {
     "type": "git",
