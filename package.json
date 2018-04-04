@@ -1,6 +1,6 @@
 {
   "name": "eng-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Personal package with shortcuts and cli helpers to help with my workflow.",
   "author": {
     "name": "Eric N. Garcia",
@@ -20,7 +20,7 @@
   "bin": {
     "eng": "bin/eng"
   },
-  "main": "bin/eng.js",
+  "main": "index.js",
   "homepage": "https://github.com/ENG618/eng-cli#readme",
   "repository": {
     "type": "git",
