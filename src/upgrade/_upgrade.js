@@ -10,7 +10,7 @@ const {
   info,
   warn,
   end,
-} = require('./helpers/logs');
+} = require('../helpers/logs');
 
 
 /**
@@ -64,7 +64,7 @@ function catchErr(err) {
 /**
  * Updates the systems ruby-gems
  */
-async function updateSystem() {
+async function system() {
   start('Updating RubyGems');
 
   command = 'gem update --system';
@@ -78,7 +78,7 @@ async function updateSystem() {
 /**
  * Synchronizes the dot files with the remote git repository.
  */
-async function updateDotFiles() {
+async function dotFiles() {
   const gitString = 'git --git-dir=$HOME/.eng-cfg/ --work-tree=$HOME';
 
   start('Syncing dot-files');
@@ -98,7 +98,7 @@ async function updateDotFiles() {
 /**
  * Update node via nvm.
  */
-async function updateNode() {
+async function node() {
   const shell = `$NVM_DIR/nvm.sh`;
   let command = 'nvm install node';
 
@@ -118,7 +118,7 @@ async function updateNode() {
 /**
  * Update brew packages.
  */
-async function updateBrew() {
+async function brew() {
   start('Updating brew');
 
   const upgradePrompt = {
@@ -160,7 +160,7 @@ async function updateBrew() {
 /**
  * Update NVM.
  */
-async function updateNvm() {
+async function nvm() {
   const command = 'curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/install.sh | bash';
 
   start('Updating NVM');
@@ -171,11 +171,11 @@ async function updateNvm() {
 /**
  * Update yarn.
  */
-async function updateYarn() {
+async function yarn() {
   start('Updating yarn global packages');
 
   await runUpgradeCommand(
-    'yarn global upgrade-interactive',
+    'yarn global upgrade',
     'updating yarn packages'
   );
 
@@ -185,7 +185,7 @@ async function updateYarn() {
 /**
  * Update avn.
  */
-async function updateAvn() {
+async function avn() {
   start('Updating avn');
 
   await runUpgradeCommand('avn setup', 'setting up avn');
@@ -196,23 +196,23 @@ async function updateAvn() {
 /**
  * Run update on all.
  */
-async function updateAll() {
-  await updateSystem();
-  await updateDotFiles();
-  await updateNode();
-  await updateBrew();
-  await updateNvm();
-  await updateYarn();
-  await updateAvn();
+async function all() {
+  await system();
+  await dotFiles();
+  await node();
+  await brew();
+  await nvm();
+  await yarn();
+  await avn();
 }
 
 module.exports = {
-  updateAll,
-  updateSystem,
-  updateDotFiles,
-  updateNode,
-  updateBrew,
-  updateNvm,
-  updateAvn,
-  updateYarn,
+  all,
+  system,
+  dotFiles,
+  node,
+  brew,
+  nvm,
+  avn,
+  yarn,
 };
