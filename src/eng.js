@@ -4,7 +4,7 @@ const program = require('commander');
 const chalk = require('chalk');
 
 const pkg = require('../package.json');
-const header = require('../assets/asci-header');
+const header = require('./assets/asci-header');
 
 
 program
