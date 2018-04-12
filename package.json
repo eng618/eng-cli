@@ -1,6 +1,6 @@
 {
   "name": "eng-cli",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Personal package with shortcuts and cli helpers to help with my workflow.",
   "author": {
     "name": "Eric N. Garcia",
