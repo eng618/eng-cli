@@ -56,3 +56,11 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# oclif
+*-debug.log
+*-error.log
+/.nyc_output
+/dist
+/package-lock.json
+/tmp

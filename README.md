@@ -1,4 +1,3 @@
-
 ```
  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄               ▄▄▄▄▄▄▄▄▄▄▄  ▄            ▄▄▄▄▄▄▄▄▄▄▄
 ▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░░░░░░░░░░░▌             ▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌
@@ -13,12 +12,31 @@
  ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  ▀▀▀▀▀▀▀▀▀▀▀               ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀
 ```
 
+---
+
 # eng-cli
-Personal npm package with shortcuts and cli helpers to help with my workflow.
 
-## Install
+Personal package with shortcuts and cli helpers to help with my workflow.
 
-This package is intended to be installed globally.  To install simply run:
+[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
+[![Version](https://img.shields.io/npm/v/eng-cli.svg)](https://npmjs.org/package/eng-cli)
+[![Codecov](https://codecov.io/gh/ENG618/eng-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/ENG618/eng-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/eng-cli.svg)](https://npmjs.org/package/eng-cli)
+[![License](https://img.shields.io/npm/l/eng-cli.svg)](https://github.com/ENG618/eng-cli/blob/master/package.json)
+
+<!-- toc -->
+
+- [eng-cli](#eng-cli)
+- [Install](#install)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`eng hello`](#eng-hello)
+  - [`eng help [COMMAND]`](#eng-help-command)
+    <!-- tocstop -->
+
+# Install
+
+This package is intended to be installed globally. To install simply run:****
 
 ```shell
 yarn global add eng-cli
@@ -28,24 +46,72 @@ yarn global add eng-cli
 npm i -g eng-cil
 ```
 
-## Availible Options & Commands
+# Usage
 
-### Options:
+<!-- usage -->
 
-  -V, --version         output the version number
-  -h, --help            output usage information
+```sh-session
+$ npm install -g eng-cli
+$ eng COMMAND
+running command...
+$ eng (-v|--version|version)
+eng-cli/0.2.0 darwin-x64 node-v10.15.3
+$ eng --help [COMMAND]
+USAGE
+  $ eng COMMAND
+...
+```
 
-### Commands:
+<!-- usagestop -->
 
-  upgrade-all|u         Upgrade dev software
-  update-system|us      Upgrade system's Ruby environment
-  update-dot-files|udf  Synchronizes .files with remote repository
-  update-node|un        Basic Hello World check!
-  update-brew|ub        Update brew, and all installed packages
-  update-nvm|unvm       Update nvm
-  update-avn|uavn       Update avn
-  update-yarn|uy        Update all globally install yarn packages.
+# Commands
 
------
+<!-- commands -->
+
+- [eng-cli](#eng-cli)
+- [Install](#install)
+- [Usage](#usage)
+- [Commands](#commands)
+  - [`eng hello`](#eng-hello)
+  - [`eng help [COMMAND]`](#eng-help-command)
+
+## `eng hello`
+
+Describe the command here
+
+```
+USAGE
+  $ eng hello
+
+OPTIONS
+  -n, --name=name  name to print
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+```
+
+_See code: [src/commands/hello.js](https://github.com/ENG618/eng-cli/blob/v0.2.0/src/commands/hello.js)_
+
+## `eng help [COMMAND]`
+
+display help for eng
+
+```
+USAGE
+  $ eng help [COMMAND]
+
+ARGUMENTS
+  COMMAND  command to show help for
+
+OPTIONS
+  --all  see all commands in CLI
+```
+
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
+
+<!-- commandsstop -->
+
+---
 
 [Changelog](./CHANGELOG.md)
