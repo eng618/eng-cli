@@ -25,14 +25,12 @@ Personal package with shortcuts and cli helpers to help with my workflow.
 [![License](https://img.shields.io/npm/l/eng-cli.svg)](https://github.com/ENG618/eng-cli/blob/master/package.json)
 
 <!-- toc -->
-
-- [eng-cli](#eng-cli)
-- [Install](#install)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`eng hello`](#eng-hello)
-  - [`eng help [COMMAND]`](#eng-help-command)
-    <!-- tocstop -->
+* [eng-cli](#eng-cli)
+* [Install](#install)
+* [or](#or)
+* [Usage](#usage)
+* [Commands](#commands)
+<!-- tocstop -->
 
 # Install
 
@@ -49,7 +47,6 @@ npm i -g eng-cil
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g eng-cli
 $ eng COMMAND
@@ -61,19 +58,14 @@ USAGE
   $ eng COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [eng-cli](#eng-cli)
-- [Install](#install)
-- [Usage](#usage)
-- [Commands](#commands)
-  - [`eng hello`](#eng-hello)
-  - [`eng help [COMMAND]`](#eng-help-command)
+* [`eng hello`](#eng-hello)
+* [`eng help [COMMAND]`](#eng-help-command)
+* [`eng upgrade`](#eng-upgrade)
 
 ## `eng hello`
 
@@ -110,6 +102,26 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.1.6/src/commands/help.ts)_
 
+## `eng upgrade`
+
+Upgrade system and dependencies
+
+```
+USAGE
+  $ eng upgrade
+
+OPTIONS
+  -b, --brew       Upgrade brew and installed packages
+  -d, --dot-files  Sync dotfiles
+  -n, --node       Upgrade node, nvm, and avn
+  -y, --yarn       Upgrade yarn globally installed packages
+
+DESCRIPTION
+  ...
+  You can specify what you want to update or update all, see help for details
+```
+
+_See code: [src/commands/upgrade.js](https://github.com/ENG618/eng-cli/blob/v0.2.0/src/commands/upgrade.js)_
 <!-- commandsstop -->
 
 ---
